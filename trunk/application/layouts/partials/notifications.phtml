@@ -1,0 +1,34 @@
+<?php
+    $userNotifications = Zend_Registry::get('userNotifications');
+    $new_notifications = false;
+    if($userNotifications['new_messages'] != 0)
+        $new_notifications = true;
+?>
+<a href="javascript:void(0)" title="Message" id="notificationMessages" class="head_btn message<?php if($new_notifications) print ' active'; ?>">Message</a>
+<span id="notification_count" class="notification_count <?php if($new_notifications) print ' visible'; ?>"><?php print $userNotifications['new_messages']; ?></span>
+<div id="notification_popup" class="notification_popup">
+    <div id="notWrap" class="notification_wrap">
+        <div id="notData" class="notification_notData<?php if(!$new_notifications) print ' empty_notifications'; ?>" >
+            <?php if(!empty($userNotifications['messages'])): ?>
+                <?php foreach ($userNotifications['messages'] as $key => $userNotification) :?>
+                    <div class="notification_list">
+                        <a href="<?if(!empty($userNotification['link_id'])):?><?=$userNotification['link_id']?><?else:?>/default/collaborator/index<?endif;?>">
+                            <img src="<?php echo $userNotification['thumbnail']; ?>">
+                            <span class="notification_list_data">
+                                <b><?php echo $userNotification['user_name']; ?></b>:&nbsp; <?php echo $userNotification['title']; ?>
+                            </span>
+                        </a>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                You have no notifications.
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var count_notifications = <?php print count($userNotifications['messages']); ?>;
+    if(count_notifications != 0){
+        jQuery("#notData").removeClass('empty_notifications').css('height', count_notifications*60);
+    }
+</script>

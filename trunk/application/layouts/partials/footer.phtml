@@ -1,0 +1,120 @@
+<?php
+    $controller = \Zend_Controller_Front::getInstance()->getRequest()->getControllerName();
+    $module = \Zend_Controller_Front::getInstance()->getRequest()->getModuleName();
+    $action = \Zend_Controller_Front::getInstance()->getRequest()->getActionName();
+?>
+<div id="footer" class="footer<?php if($controller =='index' && $action == 'index') print ' invite_page'; ?>">
+    <?php if($controller !='index' || $action != 'index'): ?>
+        <div class="footer-left">
+            <a href="/" title="Splyst"><img src="/img/logo2.png" alt="Splyst" /></a>
+        </div>
+    <?php endif; ?>
+    <?php if($controller =='index' && $module =='default' && $action != 'login'): ?>
+        <div class="invite_menu">
+            <ul>
+                <li><a href="/default/index/about">About Us</a></li>
+                <li><a href="/default/index/privacy">Privacy Policy</a></li>
+                <li><a href="/default/index/terms">Terms of Service</a></li>
+            </ul>
+        </div>
+    <?php endif; ?>
+</div>
+<script id="notificationTemplate" type="text/x-jquery-tmpl">
+    <div class="notification_list">
+        {{if link_id}}
+            <a href="${link_id}">
+        {{else}}
+            <a href="/default/collaborator/index">
+        {{/if}}
+            <img src="${thumbnail}" />
+            <span class="notification_list_data">
+                <b>${user_name}</b>:&nbsp; ${title}
+            </span>
+        </a>
+    </div>
+</script>
+<script type="text/javascript">
+    <?php if($controller =='index' && $module =='default'): ?>
+        <?php if($action == 'index'): ?>
+            $(document).ready(function(){
+                $.supersized({
+                    slides: [ {image:'/img/temp_landing_3.jpg', title:''} ]
+                });
+                landing_invite();
+            });
+        <?php endif; ?>
+    <?php else: ?>
+        $(document).ready(function(){
+            resize_bg();
+            setInterval(getNotificationsData,10000);
+
+            jQuery("#notData").mCustomScrollbar({
+                scrollInertia: 4,
+                advanced:{
+                    updateOnContentResize: true,
+                    autoExpandHorizontalScroll: true
+                }
+            });
+            $("#notificationMessages").toggle(function(){
+                $("#notification_popup").addClass('visible');
+                $("#notification_count").removeClass('visible');
+                $(this).removeClass('active');
+                $.post("/default/ajax/viewnotifications", {}, function(result){},"json");
+            },function(){
+                $("#notification_popup").removeClass('visible');
+            });
+
+            $("#notification_popup").mouseleave(function(){
+                if($(this).hasClass('visible')){
+                    $(this).removeClass('visible');
+                    $("#notificationMessages").trigger('click');
+                }
+            });
+
+            <?if(!empty($_SESSION['user_id'])):?>
+                <?if($controller != 'recommendation'):?>
+                    if((/default\/recommendation\/index/gi).test(window.document.referrer)){
+                        restartCounter();
+                    }
+                    showCounter();
+                    setInterval(function(){showCounter()},180000);
+                <?else:?>
+                    restartCounter();
+                    $.post('/default/recommendation/checkrecnumber',{}, function(){},'json');
+                    setInterval(function(){addNewRecommendations()},180000);
+                <?endif;?>
+            <?endif;?>
+        });
+        // stop recommendation page fuctionality ---------------------------------------
+    <?php endif; ?>
+    // Additional JS functions here
+    window.fbAsyncInit = function() {
+        FB.init({
+            appId      : '<?=Zend_Registry::get('fb_appID') ?>', // App ID
+            channelUrl : 'channel.html', // Channel File
+            status     : true, // check login status
+            cookie     : true, // enable cookies to allow the server to access the session
+            xfbml      : true  // parse XFBML
+        });
+    };
+    (function(d){
+        var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+        if (d.getElementById(id)) {return;}
+        js = d.createElement('script'); js.id = id; js.async = true;
+        js.src = "//connect.facebook.net/en_US/all.js";
+        ref.parentNode.insertBefore(js, ref);
+    }(document));
+
+    // Google Analitics --------------------
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38486736-1']);
+    _gaq.push(['_setDomainName', '195.177.237.145.']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    // stop google analitic ----------------
+</script>

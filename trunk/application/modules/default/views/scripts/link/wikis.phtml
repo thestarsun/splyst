@@ -1,0 +1,22 @@
+<?php if(!empty($this->link_data)): ?>
+    <?php foreach($this->link_data as $news_key => $news): ?>
+        <?if(!empty($news->title)):?>
+        <div class="experience_content_item">
+            <?php if(!empty($news->image)): ?>
+                <div class="experience_content_item_image"><img src="<?php print $news->image; ?>" alt="" /></div>
+            <?php endif; ?>
+            <div class="experience_content_item_title"><?if(!empty($news->title)): echo $news->title; endif;?></div>
+            <div class="experience_content_item_desc"><?php print $news->snippet; ?></div>
+            <a href="/default/link/wiki_page?id=<?php print $this->id; ?>&wiki_key=<?php print $news_key; ?>&amount=<?=$this->amount?>" class="experience_news_link"></a>
+        </div>
+<?endif;?>
+    <?php endforeach; ?>
+<?if($this->amount == 2):?> 
+    <a href="javascript:void(0)" class="more_link" onclick="getContent('wikis', 10, <?php print $this->id; ?>)">More...</a>
+    <div class="block_loader"><img src="/img/ajax-loader_grey.gif" height="32px" width="32px;" /></div>
+<?endif;?>
+<?php else: ?>
+    <div class="experience_content_item">
+        No wiki data
+    </div>
+<?php endif; ?>

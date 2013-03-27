@@ -1,0 +1,156 @@
+<?php
+    $separator = 12;
+    if($this->colaborators_real_count > 13)
+        $separator = 2;
+?>
+<script src="/js/slider/jquery.jcarousel.js"></script>
+<script src="/js/jquery.isotope.min.js"></script>
+<script id="userTemplate" type="text/x-jquery-tmpl">
+    <li id="fb_${id}" class="collaborators_block_little invite-item">
+        <div class = "hidden invite-item_btns">
+            <a href="javascript:void(0)" class="invite_btns">Invite</a>
+        </div>
+        <div class="collab_user_little">
+            <div class="collab_user_picture_little">
+                <span class="checked_box"></span>
+                <img src="${picture.data.url}" width="80px" height="85px" />
+            </div>
+            <div class="collab_user_name_little">${name}</div>
+        </div>
+    </li>
+</script>
+<script type="text/javascript">
+    var userIds = new Array();
+    var friendsArray = <?=json_encode($this->allcolaborators); ?>;
+</script>
+<?php if(!$this->allcolaborators): ?>
+    <script type="text/javascript">
+        jQuery(document).ready(function(){
+            jQuery(window).resize(function(){
+                <?php if($this->colaborators_real_count > 13): ?>
+                    collaborators_slides("#collaborators_items", 1);
+                <?php endif; ?>
+                <?php if($this->otherFriends_real_count > 13): ?>
+                    collaborators_slides("#collaborators_items2", 1);
+                <?php endif; ?>
+            });
+
+//            show_invite_btns();
+            <?php if($this->colaborators_real_count > 13): ?>
+                collaborators_slides("#collaborators_items");
+            <?php endif; ?>
+            <?php if($this->otherFriends_real_count > 13): ?>
+                collaborators_slides("#collaborators_items2");
+            <?php endif; ?>
+            see_collaborators();
+//              collaborators_check_user();
+        });
+    </script>
+    <div id="collaborators-content" class="collaborators-content">
+        <h1 class="page_title collaborators">People</h1>
+        <div class="collaborators-content_block">
+            <div id="collaborators_items" class="collaborators_items">
+                <ul>
+                    <li class="collaborators_block<?php if($this->colaborators_real_count > 13) print ' carousel'; ?>">
+                        <?php foreach($this->colaborators as $key=>$item): ?>
+                                <div class="collab_user">
+                                    <div class="collab_user_picture"><img src="<?php print $item['picture']['data']['url']; ?>" /></div>
+                                    <div class="collab_user_name"><?php print $item['name']; ?></div>
+                                </div>
+                            <?php if( ($key+1)%$separator == 0 ): ?>
+                                </li>
+                                <?php if(!empty($this->colaborators[$key+1])): ?>
+                                    <li class="collaborators_block<?php if($this->colaborators_real_count > 13) print ' carousel'; ?>">
+                                <?php endif; ?>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <h1 class="page_title collaborators">Facebook friends not on Splyst</h1>
+        <a href="javascript:void(0)" id="see_collaborators" class="add_experience_btn_link collaborators">See all</a>
+        <div class="collaborators-content_block2">
+            <div id="collaborators_items2" class="collaborators_items2">
+                <ul>
+                    <?php foreach($this->otherFriends as $item): ?>
+                        <li id="fb_<?php print $item['id']; ?>" class="collaborators_block_little invite-item">
+                            <div class = "hidden invite-item_btns">
+                                <a href="javascript:void(0)" class="invite_btns">Invite</a>
+                            </div>
+                            <div class="collab_user_little">
+                                <div class="collab_user_picture_little">
+                                    <img src="<?php print $item['picture']['data']['url']; ?>" width="80px" height="85px" />
+                                </div>
+                                <div class="collab_user_name_little"><?php print $item['name']; ?></div>
+                            </div>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div id="collaborators-content2" class="collaborators-content hidden">
+        <div id="block_loader" class="block_loader"><img src="/img/ajax-loader_grey.gif" height="66px" width="66px;" /></div>
+    </div>
+<?php else: ?>
+    <script type="text/javascript">
+        jQuery(document).ready(function(){
+//            show_invite_btns();
+            jQuery('#collaborators-scroll').isotope({
+                itemSelector : '.collaborators_block_little',
+                animationEngine: 'jquery',
+                containerStyle: {position: 'relative'},
+                layoutMode: 'fitColumns'
+            });
+            jQuery("#collaborators_all").mCustomScrollbar({
+                scrollInertia: 4,
+                horizontalScroll: true,
+                advanced:{
+                    updateOnContentResize: true,
+                    autoExpandHorizontalScroll: true
+                },
+                callbacks:{
+                    onTotalScroll: function(){
+                        load_collaborators();
+                    }
+                }
+            });
+            hide_collaborators();
+
+            jQuery("#collaborators_search").keyup(function(e){
+                if (e.which == 32 || e.which == 13 || e.which == 8 || (65 <= e.which && e.which <= 65 + 25)
+                        || (97 <= e.which && e.which <= 97 + 25)){
+                    var name = jQuery(this).val().toLowerCase().trim();
+                    collaborators_search(name);
+                }
+            });
+        });
+    </script>
+    <h1 class="page_title collaborators">Facebook friends not on Splyst</h1>
+    <a href="javascript:void(0)" id="hide_collaborators" class="add_experience_btn_link collaborators collab_hide">Hide all</a>
+    <div class="collaborators_search">
+        <input id="collaborators_search" type="text" placeholder="Find someone" class="form-text" />
+    </div>
+    <div id="search_loader" class="search_loader"><img src="/img/ajax-loader_grey.gif" height="66px" width="66px;" /></div>
+    <div id="collaborators_all" class="collaborators_all">
+        <?php if(!empty($this->allcolaborators)): ?>
+            <ul id="collaborators-scroll" class="collaborators_scroll">
+                <?php foreach($this->allcolaborators as $item): ?>
+                    <li id="fb_<?php print $item['id']; ?>" class="collaborators_block_little invite-item">
+                        <div class = "hidden invite-item_btns">
+                            <a href="javascript:void(0)" class="invite_btns">Invite</a>
+                        </div>
+                        <div class="collab_user_little">
+                            <div class="collab_user_picture_little">
+                                <span class="checked_box"></span>
+                                <img src="<?php print $item['picture']['data']['url']; ?>" />
+                            </div>
+                            <div class="collab_user_name_little"><?php print $item['name']; ?></div>
+                        </div>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+    </div>
+<?php endif; ?>

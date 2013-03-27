@@ -1,0 +1,56 @@
+<?php if(!empty($this->message)) :?><div style="color:red; background-color: #FFD8D8; border: 1px solid #FFA9A9; text-align: center; width: 30%; margin: 42px auto -48px;"><? echo $this->message;?></div> <?php endif; ?>
+<div class="loginFormBox">
+    <div class ="label_name">Splyst admin panel</div>
+    <div class="loginForm">
+        <form action="" method ="post">
+            <label for="login"><span>Login</span></label>
+            <input type ="text" name ="login" id ="login" val="" placeholder ="Login"/>
+            <label for="pass"><span>Password</span></label>
+            <input type ="password" name ="pass" id ="pass" val="" placeholder ="password"/>
+            <button type ="submit" name ="log-in" >Login</button>
+        </form>
+    </div>
+</div>
+<style>
+    .loginFormBox{
+   background-color: #80BEE3;
+   box-shadow: 10px 5px 19px rgba(0, 0, 0, 0.5);
+    border: 1px solid white;
+    border-radius: 8px 8px 8px 8px;
+    color: white;
+    height: 300px;
+    margin: 100px auto;
+    width: 500px;
+}
+.loginForm{
+    width: 333px;
+    margin: auto;
+    height: 77px;
+}
+
+.loginForm label{
+    display: inline-block;
+    width: 94px;
+}
+.loginForm label span{
+}
+
+.loginForm button{
+    float: right;
+    margin-right: 26px;
+    margin-top: 23px;
+}
+.login{
+    float:left;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+}
+.label_name{
+    font-size: 30px;
+    margin: 57px auto;
+    width: 386px;
+    text-align: center;
+}
+
+</style>

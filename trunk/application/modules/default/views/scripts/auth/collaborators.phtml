@@ -1,0 +1,69 @@
+<?php 
+	$data = array(
+		"0" => array(
+			"uid" => "100001932258708",
+			"name" => "Alex Frost",
+			"pic_square" => "http://profile.ak.fbcdn.net/hprofile-ak-ash3/49935_100001932258708_2663764_q.jpg"
+		),
+		"1" => array(
+			"uid" => "100003936176530",
+			"name" => "Elena Z'ora",
+			"pic_square" => "http://profile.ak.fbcdn.net/hprofile-ak-snc6/260816_100003936176530_1875029950_q.jpg"
+		),
+		"2" => array(
+			"uid" => "100001932258718",
+			"name" => "Alex Frost",
+			"pic_square" => "http://profile.ak.fbcdn.net/hprofile-ak-ash3/49935_100001932258708_2663764_q.jpg"
+		),
+		"3" => array(
+			"uid" => "100003936176520",
+			"name" => "Elena Z'ora",
+			"pic_square" => "http://profile.ak.fbcdn.net/hprofile-ak-snc6/260816_100003936176530_1875029950_q.jpg"
+		),
+		"4" => array(
+			"uid" => "100001932258728",
+			"name" => "Alex Frost",
+			"pic_square" => "http://profile.ak.fbcdn.net/hprofile-ak-ash3/49935_100001932258708_2663764_q.jpg"
+		),
+		"5" => array(
+			"uid" => "100003936176540",
+			"name" => "Elena Z'ora",
+			"pic_square" => "http://profile.ak.fbcdn.net/hprofile-ak-snc6/260816_100003936176530_1875029950_q.jpg"
+		),
+		"6" => array(
+			"uid" => "100001932258738",
+			"name" => "Alex Frost",
+			"pic_square" => "http://profile.ak.fbcdn.net/hprofile-ak-ash3/49935_100001932258708_2663764_q.jpg"
+		),
+		"7" => array(
+			"uid" => "100003936176550",
+			"name" => "Elena Z'ora",
+			"pic_square" => "http://profile.ak.fbcdn.net/hprofile-ak-snc6/260816_100003936176530_1875029950_q.jpg"
+		),
+	);
+	$count = count($data);
+?>
+<h1 class="h1_page">Friends</h1>
+<div class="form-wrapper">
+    <form id="friends-from" class="friends_from" action="" method="POST">
+        <div class="form-item checkbox first">
+            <?php foreach ($data as $key => $item): ?>
+                <div class="friends-elem">
+                    <table class="w100">
+                        <tbody>
+                            <tr>
+                                <td class="w10"><input type="checkbox" id="<?php print $item['uid'] ?>" value="<?php print $item['uid'] ?>" /></td>
+                                <td class="w25"><label for="<?php print $item['uid'] ?>"><img src="<?php print $item['pic_square'] ?>" alt="<?php print $item['name'] ?>" /></label></td>
+                                <td class="w65"><h5 class="name-friend"><label for="<?php print $item['uid'] ?>"><?php print $item['name'] ?></label></h5></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <?php if (($key + 1) % 3 == 0): ?>
+                </div>
+                <div class="form-item checkbox<?php if (!isset($data[$key + 3])) print ' last'; ?>">
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </div>
+    </form>
+</div>
