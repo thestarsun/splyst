@@ -1,0 +1,121 @@
+<div class = "wrap">
+    <div>
+        <img class = "logotip" src="/img/logo.png" alt="" />
+    </div>
+    <div id ="logout"><a href="/admin/index/logout">Logout</a></div>
+    <div class = "main">
+        <label for="new_email"><span>Add email to list bellow</br></span></label>
+        <input type="text" name="new_email" id="new_email" val="" placeholder="Enter Email"/>
+        <button name ="AddEmail" id="addEmail" style="margin-top: 4px;">Add email</button>
+        <div id="er_msg"></div>
+        <?if(!empty($this->emails)):?>
+        <h3>List of emails</h3>
+        <form method="post" action="">
+            <table>
+                <tr style=" height: 31px; ">
+                    <th>ID</th>
+                    <th>Email</th>
+                    <th>Can use site</th>
+                    <th>Send email</th>
+                    <td class = "delmai"></td>
+                </tr>
+                <?foreach ($this->emails as $email):?>
+                <tr>
+                    <td><?=$email['id']?></td>
+                    <td><?=$email['email']?></td>
+                    <td class = "cent"><input type="checkbox" <?if($email['sent']=='1'):?>checked ="checked"<?endif;?> atrid ="<?=$email['id']?>" class ="checkEmail"/></td>
+                    <td class = "cent"><input type="checkbox" name ="send[<?=$email['id']?>]"></td>
+                    <td class = "delmai"><a  class = "delmail" href="javascript:void(0)" atrid ="<?=$email['id']?>"><img src="/img/del.gif"/></a></td>
+                </tr>
+                <?endforeach;?>
+            </table>
+            <button type="submit">Send mails</button>
+        </form>
+        <?endif;?>
+    </div>
+</div>
+<script>
+$(document).ready(function(){
+    $('.delmail').click(function(){
+        $.post('/admin/index/deleteemail', {id: $(this).attr('atrid')}, function(){}, 'json');
+        $(this).parent().parent().remove();
+    })
+    $('#addEmail').click(function(){
+        $('#er_msg').empty();
+        if($('#new_email').val() != ""){
+            val = $('#new_email').val();
+            $.post('/admin/index/newemail', {val: val}, function(resp){
+                if(resp == null)
+                window.location.reload();
+            else
+                $('#er_msg').empty().append(resp.error);
+            }, 'json');
+        }
+    })
+    $('.checkEmail').click(function(){
+        on =($(this).is(':checked'))?1:0;
+        id =$(this).attr('atrid'); 
+        $.post('/admin/index/access', {id: id, val: on}, function(){}, 'json');
+    })
+})
+</script>
+<style>
+    body{
+        background: none repeat scroll 0 0 #FAFBFC;
+    }
+    tr:nth-child(even){
+        background: #E4EBF2;
+    }
+    tr:nth-child(odd){
+        background: #CCD6E0;
+    }
+    tr{
+        padding: 3px;
+    }
+    h3{
+        margin: 21px 20px 3px
+    }
+    button{
+        margin-top: 20px; 
+    }
+    .wrap{
+        width: 100%;
+    }
+/*    .wrap div{
+        margin: auto;
+        width: 500px;
+    }*/
+    td{
+        padding: 0 5px;
+    }
+    th{
+        background: none repeat scroll 0 0 #599CBD;
+    color: white;
+    font-weight: 100;
+    padding: 0 6px;
+    text-align: center;
+    }
+    .cent{
+        text-align: center;
+    }
+    td.delmai{
+        background: white;
+    }
+    #logout{
+        float: right;
+        margin: 10px;
+    }
+    img.logotip{
+        float: left;
+        margin: 20px 20px 26px 21px;
+    }
+    .main{
+        clear: both;
+        margin-left: 70px;
+        margin-top: 40px;
+    }
+    #er_msg{
+        color: red;
+        margin: 10px 0;
+    }
+</style>

@@ -1,0 +1,24 @@
+<script type="text/javascript">
+    jQuery(document).ready(function(){
+        jQuery("#news_page_container").mCustomScrollbar({
+            scrollInertia: 4,
+            advanced:{
+                updateOnContentResize:true
+            }
+        });
+    });
+</script>
+<div class="dashboard-content wiki_page">
+    <div id="news_page_container" class="news_page_container">
+        <div class="image_page_body">
+            <h1 class="page_title fblinks"><?=$this->title?></h1>
+            <?if(!empty($_SESSION['user_id'])):?>
+                <div class="recommendation-item_btns">
+                    <a onclick="" class="recommendation_btns splyst" href="javascript:void(0)">Splyse</a>
+                    <a onclick="" class="recommendation_btns share" href="javascript:void(0)">Share</a>
+                </div>
+            <?endif;?>
+            <img onerror="handleImgError(this, 4, 1)" src="<?=$this->url?>" style="height: auto;" />
+        </div>
+    </div>
+</div>

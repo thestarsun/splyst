@@ -1,0 +1,73 @@
+<?php
+    $front = Zend_Controller_Front::getInstance();
+    $bootstrap = $front->getParam("bootstrap");
+    $site_name = $bootstrap->getOption('site_name');
+    $controller = \Zend_Controller_Front::getInstance()->getRequest()->getControllerName();
+    $module = \Zend_Controller_Front::getInstance()->getRequest()->getModuleName();
+    $action = \Zend_Controller_Front::getInstance()->getRequest()->getActionName();
+?>
+<div class="header experiences_page header_fblinks">
+    <div class="logo">
+        <a href="/default/recommendation/index">
+            <img src="/img/logo.png" alt="<?php print $site_name; ?>" />
+        </a>
+    </div>
+    <div class="header-btns">
+        <?php print $this->render("notifications.phtml"); ?>
+    </div>
+    <?php if(!empty($_SESSION['user_name'])): ?>
+        <div class="dashboard-user">
+            <div class="dashboard-user_photo"><img src="<?=$_SESSION['user_pic']?>" height="26px" /></div>
+            <div class="dashboard-user_name">
+                <?=$_SESSION['user_name']?>
+            </div>
+        </div>
+    <?php endif; ?>
+    <?php if(($controller =='fblinks' || $controller =='link') && $module =='default'): ?>
+        <div class="header_right">
+            <div class="dashboard-user_menu">
+                <div class="news_page_view">
+                    <label>page view:</label>
+                    <a id="view_news_page_frame_content" href="javascript:void(0)" class="news_page_view_item<?php if($this->frame) print ' active'; else print ' disabled';?>">frame</a>
+                    <a id="view_news_page_content" href="javascript:void(0)" class="news_page_view_item <?php if(!$this->frame) print ' active';?>">reader</a>
+                    <a href="<?php print $this->url; ?>" class="news_page_view_item" target="_blank">new window</a>
+                </div>
+                <ul class="menu news_menu">
+                    <?php if(empty($_SESSION['user_name'])): ?>
+                        <li class="menu_item"><a href="javascript:void(0)" onclick="show_popup('login')">Log in</a></li>
+                    <?php endif; ?>
+                    <li class="menu_item"><a href="/default/recommendation/index">Home<span id="recCounter" class="recCounter"></span></a></li>
+                    <li class="menu_item"><a href="javascript:void(0)">Splyse</a></li>
+                    <li class="menu_item"><a href="javascript:void(0)">Share</a></li>
+                    <?php if($controller =='fblinks'&&$module =='default'&& $action =='news'): ?>
+                        <li id="show_news_comment_li" class="menu_item"><a href="javascript:void(0)">Comments</a></li>
+                    <?php endif; ?>
+                    <li class="menu_item news_back"><a href="javascript: history.go(-1)">Back</a></li>
+                </ul>
+            </div>
+        </div>
+    <?php elseif($controller =='dashboard' && $module =='default' && $action = 'experiences'): ?>
+        <div class="header_right">
+            <div class="dashboard-user_menu">
+                <?php if($controller =='fblinks'&&$module =='default'&& $action =='content'): ?>
+                    <a onclick="" class="add_experience_btn_link back_btn" href="javascript:void(0)">Back</a>
+                <?php else:?>
+                <ul class="menu">
+                    <?php if(empty($_SESSION['user_name'])): ?>
+                        <li class="menu_item"><a href="javascript:void(0)" onclick="show_popup('login')">Log in</a></li>
+                    <?php endif; ?>
+                        <li class="menu_item"><a href="/default/recommendation/index">Home<span id="recCounter" class="recCounter"></span></a></li>
+                        <li class="menu_item active"><a href="/default/dashboard/index">Experiences</a></li>
+                        <li class="menu_item"><a href="/default/collaborator/index">People</a></li>
+                        <li class="menu_item"><a href="javascript:void(0)" id="manageBookmark">Manage bookmaks</a></li>
+                        <li class="menu_item"><a href="javascript:void(0)" id="manageBookmarkDone">Done</a></li>
+                        <li class="menu_item"><a href="javascript:void(0)">Settings</a></li>
+                    <?php if(!empty($_SESSION['user_name'])): ?>
+                        <li class="menu_item"><a href="javascript:void(0)" onclick="logout()">Logout</a></li>
+                    <?php endif; ?>
+                </ul>
+                <?php endif; ?>
+            </div>
+        </div>
+    <?php endif; ?>
+</div>

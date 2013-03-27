@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <?=$this->partial("head.phtml"); ?> <!-- connect head -->
+    </head>
+    <body>
+        <div id="wrapper" class="wrapper">
+            <?php print $this->render("header_full.phtml"); ?> <!-- connect header -->
+            <div id="conteiner" class="conteiner">
+                <div id="squeeze-bg" class="squeeze-bg">
+                    <?php print $this->layout()->content; ?> <!-- connect content -->
+                </div>
+            </div>
+        </div>
+        <?php print $this->partial("footer.phtml"); ?> <!-- connect footer -->
+        <?php print $this->partial("pop-ups.phtml"); ?> <!-- connect pop-ups window -->
+    </body>
+</html>

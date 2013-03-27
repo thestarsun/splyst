@@ -1,0 +1,35 @@
+<script type="text/javascript">
+    var elements = <?php print json_encode($this->experience); ?>;
+    var element_width = 267;
+
+    jQuery(document).ready(function(){
+        var container = jQuery('#dashboard-content');
+        var container_width = jQuery("#dashboard-content").width();
+        var count_elements = Math.ceil((container_width-240)/element_width)+1;
+    });
+</script>
+
+<!--<h1 class="page_title">Experiences</h1>-->
+<div id="dashboard-content" class="dashboard-content">
+    <?php if(!empty($this->experience)):?>
+        <?php foreach($this->experience as $exp):?>
+            <div class="dashboard-item">
+                <?if($exp['exp_id'] != 64):?><div class = "delExperience" style="position: absolute;" exp_ID ="<?=$exp['id']?>"><img class = "del_exp_img" src="/img/del.gif"></div><?endif;?>
+                <div class="dashboard-item-image">
+                    <a href="/default/dashboard/experience?id=<?=$exp['id']?>">
+                        <img src="<?if(!empty($exp['exp_thumbnail'])):?><?php print $this->temp_dir.$exp['exp_thumbnail']?><?else:?>/img/<?if($exp['exp_id'] == 64):?>plus.png<?else:?>plus.jpg <?endif;?><?endif;?>" />
+                    </a>
+                </div>
+                <div class="dashboard-item-content">
+                    <div class="dashboard-item-name"><?=$exp['exp_title']?></div>
+                    <div class="dashboard-item-links">
+                        <a href="/default/dashboard/experience?id=<?=$exp['id']?>" class="dashboard-item_items">Items(<?=$exp['count']?>)</a>
+                        <a href="javascript:void(0)" class="dashboard-item_shared">Shared(0)</a>
+                    </div>
+                </div>
+            </div>
+       <?php endforeach; ?>
+    <?php else: ?>
+        <div class="empty_page">You have not created any experience.</div>
+    <?php endif;?>
+</div>

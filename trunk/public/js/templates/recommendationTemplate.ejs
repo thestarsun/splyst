@@ -1,0 +1,23 @@
+<% if(type == 1) { %>
+    <div class='recommendation-item news'>
+<% } else if(type == 2){ %>
+    <div class='recommendation-item image'>
+<% } else { %>
+    <div class='recommendation-item news'>
+<% } %>
+        <div class="recommendation-item_title"><%= title %></div>
+        <% if(type == 1) { %>
+            <% if(thumbnail) { %>
+                <div class="recommendation-item_img"><img src="<%= thumbnail %>" /></div>
+            <% } %>
+            <div class="recommendation-item_content"><%= description %></div>
+        <% } else if(type == 2){ %>
+            <div class="recommendation-item_content"><img src="<%= thumbnail %>" /></div>
+        <% } else { %>
+            <div class="recommendation-item_content"><img src="<%= thumbnail %>" /></div>
+        <% } %>
+        <div class="recommendation-item_btns">
+            <a href="javascript:void(0)" class="recommendation_btns splyst" onclick="show_popup('recommendation_btn')">Splyse</a>
+            <a href="javascript:void(0)" class="recommendation_btns share">Share</a>
+        </div>
+    </div>
