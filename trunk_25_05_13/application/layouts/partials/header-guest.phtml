@@ -1,0 +1,58 @@
+<?php
+    $controller = \Zend_Controller_Front::getInstance()->getRequest()->getControllerName();
+    $module = \Zend_Controller_Front::getInstance()->getRequest()->getModuleName();
+    $action = \Zend_Controller_Front::getInstance()->getRequest()->getActionName();
+?>
+<?php if($controller =='recommendation' && $module =='default' && $action == 'indexguest' ): ?>
+    <div class="top_panel">
+        <div class="panel_wrap">
+            <div class="panel_logo">
+                <a href="/default/recommendation/index">
+                    <img src="/img/logo.png" alt="Splyst" />
+                </a>
+            </div>
+            <div class="panel_text">Discover, Organize and Share your interests.</div>
+            <div id="invite_btn" class="panel_invite_btn">Request Invite</div>
+        </div>
+    </div>
+<?php else: ?>
+    <div class="header<?php if($controller =='index' && $module =='default') print ' static_pages'; ?>">
+        <div class="logo">
+            <a href="/default/recommendation/index">
+                <img src="/img/logo.png" alt="splyst" />
+            </a>
+        </div>
+        <?php if($controller =='index'&&$module =='default' && $action =='about'){ ?>
+            <div class="header_title">About Us</div>
+        <?php }elseif($controller =='index'&&$module =='default' && $action =='privacy'){ ?>
+            <div class="header_title">Privacy Policy</div>
+        <?php }elseif($controller =='index'&&$module =='default' && $action =='terms'){ ?>
+            <div class="header_title">Terms of Service</div>
+        <?php } ?>
+        <?php if($controller =='index' && $module =='default'): ?>
+            <div class="header_right">
+                <a class="add_experience_btn_link back_btn" href="javascript: history.go(-1)">Back</a>
+            </div>
+        <?php else: ?>
+            <div class="invite_btn_div">
+                <div id="invite_btn" class="form-item btn_next">
+                    <input type="button" value="Invite" class="invite_btn" />
+                </div>
+            </div>
+        <?php endif; ?>
+    </div>
+<?php endif; ?>
+<script>
+    $(document).ready(function(){
+        <?php if($controller =='recommendation' && $module =='default' && $action == 'indexguest' ): ?>
+            popup_link();
+        <?php endif; ?>
+        $('#invite_btn').click(function(){
+            close_content_popup();
+            $("#splyst_popup").css('top', '130px');
+            show_popup('landing_invite');
+        });
+        landing_invite();
+    });
+</script>
+

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <?=$this->partial("head.phtml"); ?> <!-- connect head -->
+    </head>
+    <body>
+        <div id="wrapper" class="wrapper">
+            <div class="landing_page_wrap">
+                <div class="landing_form">
+                    <div class="landing_logo"><img src="/img/logo.png" alt="splyst" /></div>
+                    <form method="POST" action="" class="login_from" id="login-from" onkeypress="if(event.keyCode==13) popup_login();">
+                        <div class="form-item">
+                            <span class="form-text_bg input_email"></span>
+                            <input type="text" placeholder="E-mail" class="form-text" name="email" id="login-email">
+                        </div>
+                        <div class="form-item">
+                            <span class="form-text_bg input_pass"></span>
+                            <input type="password" placeholder="Password" class="input_pass form-text" name="password" id="login-password">
+                        </div>
+                        <div id ="err-div_login" class="err_div_log"></div>
+                        <div class="form-actions">
+                            <div class="checkbox-item">
+                                <input type="checkbox" class="form-checkbox" checked="checked" name="remember_me" id="remember_me" />
+                                <label for="remember_me">Remember me</label>
+                            </div>
+                            <a href="javascript:void(0)" class="forget_pass" onclick="forget_password('block')">Forget Password ?</a>
+                        </div>
+                        <div class="form-actions">
+                            <input type="button" value="Login" class="form-submit" onclick="popup_login()" />
+                            <a onclick="login()" href="javascript:void(0)" class="fb login_button">
+                                <div class="logo_wrapper"><span class="fb_logo"></span></div>
+                                <span>Login with Facebook</span>
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <?php print $this->partial("footer.phtml"); ?> <!-- connect footer -->
+        <?php print $this->partial("pop-ups.phtml"); ?> <!-- connect pop-ups window -->
+    </body>
+</html>
+
+<script>
+    $(document).ready(function(){
+        // Additional JS functions here
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId      : '<?=Zend_Registry::get('fb_appID') ?>', // App ID
+                channelUrl : '<?php print $this->basePath?>channel.html', // Channel File
+                status     : true, // check login status
+                cookie     : true, // enable cookies to allow the server to access the session
+                xfbml      : true  // parse XFBML
+            });
+        };
+        (function(d){
+            var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+            if (d.getElementById(id)) {return;}
+            js = d.createElement('script'); js.id = id; js.async = true;
+            js.src = "//connect.facebook.net/en_US/all.js";
+            ref.parentNode.insertBefore(js, ref);
+        }(document));
+    });
+
+    function login() {
+        FB.login(function(response) {
+            $("#splyst_overlay").show();
+            show_spiner();
+            if (response.authResponse) {
+                $.post('<?php print $this->basePath?>/default/auth/checkregistration',
+                        {'accessToken':response.authResponse.accessToken,
+                            'userID':response.authResponse.userID,
+                            'status':response.status
+                        } , function(response){
+                            show_spiner_close();
+                            if(response.registration == 'yes'){
+                                $("#regis-user_name").val(response.name);
+                                $("#regis-email").val(response.email);
+                                $("#regis-birthday").val(response.birthday);
+                                $("#regis-user_id").val(response.id);
+                                $("#regis-fb_id").val(response.fb_user_id);
+                                if(response.gender == 1) $("#regis-male").attr('checked', 'checked');
+                                else $("#regis-female").attr('checked', 'checked');
+
+                                $('.error').mouseover(function(){
+                                    $(this).next('.erDiv').show();
+                                });
+                                $('.error').bind('mouseout focus', function(){
+                                    $(this).next('.erDiv').hide();
+                                });
+                                $("#regis-birthday").datepicker({
+                                    changeMonth: true,
+                                    changeYear: true,
+                                    yearRange: "1950:2012"
+                                });
+
+                                $("#close_popup").hide();
+                                $("#splyst_popup, #register_form_block").show();
+                            }else{
+                                if(typeof $.cookie('outsidecontentid') != 'undefined' && typeof $.cookie('outsidecontentlink') != 'undefined'){
+                                    link = $.cookie('outsidecontentlink');
+                                    id = $.cookie('outsidecontentid')
+                                    $.removeCookie("outsidecontentlink");
+                                    $.removeCookie("outsidecontentid");
+                                    window.location.assign('http://'+location.hostname+'/default/fblinks/'+link+'?id='+id);
+                                }else
+                                window.location.assign('<?php print $this->basePath?>/default/recommendation/index');
+                            }
+                        }, 'json');
+                // connected
+            }
+        }, {scope: 'email, user_likes, read_friendlists, user_birthday'});
+    }
+</script>

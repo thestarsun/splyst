@@ -1,0 +1,39 @@
+<script type="text/javascript">
+    jQuery(document).ready(function(){
+        jQuery("#conteiner").css("background","none");
+        news_comment();
+        jQuery("#news_page_content").mCustomScrollbar({
+            scrollInertia: 4,
+            advanced:{
+                updateOnContentResize:true
+            }
+        });
+    });
+</script>
+<div id="news_page_container" class="news_page_container">
+    <?php if(!$this->error): ?>
+        <h1 class="page_title"><?php print $this->title;?></h1>
+        <div class="news_page_wrapper">
+            <?php if($this->frame): ?>
+                <div id="news_page_frame_content" class="news_page_content">
+                    <?php print $this->frame_content; ?>
+                </div>
+            <?php endif; ?>
+            <div id="news_page_content" class="news_page_content<?php if($this->frame) print ' hidden'; ?>">
+                <?php if($this->image): ?>
+                    <div class="news_page_image"><img src="<?php print $this->image; ?>" /></div>
+                <?php endif; ?>
+                <?php if($this->content): ?>
+                    <?php print $this->content;?>
+                <?php else: ?>
+                    Aw Snap, This site doesn’t like us... We’ll take you to the <a href="<?=$this->url?>">page</a>! =]
+                <?php endif; ?>
+            </div>
+        </div>
+    <?php else: ?>
+        <h1 class="page_title">Error</h1>
+        <div class="news_page_contentainer">
+            You don't have permissions for view this news.
+        </div>
+    <?php endif; ?>
+</div>

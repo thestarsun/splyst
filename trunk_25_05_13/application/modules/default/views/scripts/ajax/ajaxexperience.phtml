@@ -1,0 +1,19 @@
+<form id="category-form" class="category_from" class="experience_form" action="/default/auth/defaultexperience" method="POST">
+    <?if(!empty($this->experience)):?>
+        <div class="form-item checkbox first">
+            <? foreach ($this->experience as $key => $item): ?>
+                <div class="checkbox-item">
+                    <input id="category_<?= $item['exp_id'] ?>" type="checkbox" name="category['<?= $item['exp_id'] ?>']"<? if ($item['checked'] == 1): ?> checked="checked"<? endif; ?> value="<?= $item['exp_id'] ?>" class="form-checkbox" />
+                    <label for="category_<?=$item['exp_id']?>"><?= $item['exp_title'] ?></label>
+                </div>
+                <? if (($key + 1) % 12 == 0): ?>
+                    </div>
+                    <div class="form-item checkbox <? if (!isset($this->experience[$key + 12])): ?>last<? endif; ?>">
+                <? endif; ?>
+            <? endforeach; ?>
+        </div>
+    <?endif;?>
+    <div class="form-item btn_next">
+        <input type="button" value="Next" class="form-submit" id="next" onclick="savedefexpajax()"/>
+    </div>
+</form>

@@ -1,0 +1,22 @@
+<? if (!empty($this->link_data)): ?>
+    <? foreach ($this->link_data as $img): ?>
+        <div class="experience_content_item">
+            <div class="experience_content_item_image">
+                <a href="javascript:void(0)" onclick="show_media(this, 'image')">
+                    <img src="<?=$img['url']; ?>" alt="<?=$img['content']; ?>" class="original" name="<?= $img['content']; ?>" onerror="handleImgError(this, 3);" />
+                    <img src="<?= $img['tbUrl'] ?>" width="110px" height="70px" alt="" />
+                </a>
+            </div>
+            <div class="experience_content_item_title"><a href="javascript:void(0)"><?= $img['content'] ?></a></div>
+        </div>
+    <? endforeach; ?>
+    <?if($this->amount == 2):?> 
+        <a href="javascript:void(0)" class="more_link" onclick="getContent('images', 10, <?= $this->id?>)">More...</a>
+        <div class="block_loader"><img src="/img/ajax-loader_grey.gif" height="32px" width="32px;" /></div>
+    <?endif;?>
+<?else:?>
+    <div class="experience_content_item">
+        No images
+    </div>
+<? endif; ?>
+

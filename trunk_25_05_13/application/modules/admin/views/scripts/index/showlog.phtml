@@ -1,0 +1,106 @@
+<div class = "wrap">
+    <div>
+        <img class = "logotip" src="/img/logo.png" alt="" />
+    </div>
+    <div id ="logout"><a href="/admin/index/logout">Logout</a></div>
+    <div class="main">
+        <?php if(!empty($this->logs)): ?>
+            <h3>Logs</h3>
+            <table class="deleted_tags">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>User id</th>
+                        <th>User name</th>
+                        <th>Tag id</th>
+                        <th>Tag name</th>
+                        <th>Recommendation info</th>
+                        <th>Dislike recommendations</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach($this->logs as $key=>$line) : ?>
+                        <?php if(!empty($line)): ?>
+                            <tr>
+                                <td><?php print $line['time']; ?></td>
+                                <td><?php print $line['user_id']; ?></td>
+                                <td><?php print $line['user_name']; ?></td>
+                                <td><?php if(!empty($line['tag_id'])) print $line['tag_id']; ?></td>
+                                <td><?php if(!empty($line['tag_name'])) print $line['tag_name']; ?></td>
+                                <td><?php if(!empty($line['recommendation_info'])) print implode("</br>", $line['recommendation_info']); ?></td>
+                                <td>
+                                    <?php if(!empty($line['dislike_recommendations'])): ?>
+                                        <?php if(is_array($line['dislike_recommendations'])): ?>
+                                            <?php print implode("</br>", $line['dislike_recommendations']); ?>
+                                        <?php else: ?>
+                                            <?php print $line['dislike_recommendations']; ?>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php else: ?>
+            No records in log file.
+        <?php endif; ?>
+    </div>
+</div>
+
+<style>
+    body{
+        background: none repeat scroll 0 0 #FAFBFC;
+    }
+    tr:nth-child(even){
+        background: #E4EBF2;
+    }
+    tr:nth-child(odd){
+        background: #CCD6E0;
+    }
+    tr{
+        padding: 3px;
+    }
+    h3{
+        margin: 21px 20px 3px
+    }
+    button{
+        margin-top: 20px; 
+    }
+    .wrap{
+        width: 100%;
+    }
+/*    .wrap div{
+        margin: auto;
+        width: 500px;
+    }*/
+    td{
+        padding: 0 5px;
+    }
+    th{
+        background: none repeat scroll 0 0 #599CBD;
+    color: white;
+    font-weight: 100;
+    padding: 0 6px;
+    text-align: center;
+    }
+    .cent{
+        text-align: center;
+    }
+    td.delmai{
+        background: white;
+    }
+    #logout{
+        float: right;
+        margin: 10px;
+    }
+    img.logotip{
+        float: left;
+        margin: 20px 20px 26px 21px;
+    }
+    .main{
+        clear: both;
+        margin-left: 70px;
+        margin-top: 40px;
+    }
+</style>
