@@ -1,0 +1,267 @@
+<?php
+    $delete_block = '<div class="experience_setting_wrapper">';
+        $delete_block .='<a href="javascript:void(0)" class="contextual-links-trigger">Settings</a>';
+        $delete_block .='<ul class="contextual-links">';
+            $delete_block .='<li class="block-configure"><a href="javascript:void(0)" class="del_exp_img delBookmark">Delete</a></li>';
+        $delete_block .='</ul>';
+    $delete_block .='</div>';
+?>
+<script src="<?php print $this->basePath; ?>/js/tabs_js.js"></script>
+<script src="<?php print $this->basePath; ?>/js/jquery.isotope.min.js"></script>
+<script type="text/javascript">
+    jQuery(document).ready(function(){
+        jQuery("#experience-content").mCustomScrollbar({
+            scrollInertia: 4,
+            advanced:{
+                updateOnContentResize: true
+            }
+        });
+        experience_tab_big();
+
+        jQuery('#tabs_experience_content').isotope({
+            itemSelector : '.experience_block_item_cover',
+            animationEngine: 'jquery',
+            containerStyle: {position: 'relative'},
+            layoutMode: 'fitRows',
+            onLayout: function( $elems, instance ){
+//                jQuery('#experience_bookmarks_content').toggleClass('variable-sizes').isotope('reLayout');
+                jQuery('#tabs_experience_content').isotope('reLayout');
+            },
+            filter: '.bookmarks'
+        });
+        jQuery('#tabs_experience_content').isotope('reLayout');
+
+        popup_content();
+        popup_link_share();
+        manage_experience('tabs_experience_content', 'experience_block_item_big');
+        manage_experience_settings('experience_block_item_big');
+    });
+</script>
+<script id="contentTemplate_news" type="text/x-jquery-tmpl">
+    <li class="experience_block_item_cover news">
+        {{if image}}
+            <a href="javascript:void(0)" class="experience_news_link"  onclick ="opennews('${url}', '${title}','${image}')">
+        {{else}}
+            <a href="javascript:void(0)" class="experience_news_link"  onclick ="opennews('${url}', '${title}')">
+        {{/if}}
+            <div class="experience_block_item_big experience_popup">
+                {{if image}}
+                    <div class="experience_block_title">${title}</div>
+                    <div class="experience_block_content"><img src="${image}" alt="" /></div>
+                {{else}}
+                    <div class="experience_block_content news_without_pic">${title}</div>
+                {{/if}}
+            </div>
+        </a>
+    </li>
+</script>
+<script id="contentTemplate_images" type="text/x-jquery-tmpl">
+    <li class="experience_block_item_cover images">
+        <div class="experience_block_item_big ">
+            <div class="experience_block_title">${content}</div>
+            <div class="experience_block_content">
+                <a href="javascript:void(0)" onclick="show_media(this, 'image');">
+                    <img src="${url}" alt="${content}" class="original" name="${content}" onerror="handleImgError(this, 3);" />
+                    <img src="${url}" alt="" />
+                </a>
+            </div>
+        </div>
+    </li>
+</script>
+<script id="contentTemplate_videos" type="text/x-jquery-tmpl">
+    <li class="experience_block_item_cover videos">
+        <div class="experience_block_item_big ">
+            <div class="experience_block_title">${title}</div>
+            <div class="experience_block_content">
+                <a href="javascript:void(0)" onclick="show_media(this, 'video');">
+                    <iframe width="560" height="315" src="http://www.youtube.com/embed/${id}" frameborder="0" allowfullscreen class="original" name="${title}"></iframe>
+                    <img src="${thumbnail}" alt=""/>
+                </a>
+            </div>
+        </div>
+    </li>     
+</script>
+<script id="contentTemplate_wikis" type="text/x-jquery-tmpl">
+     <li class="experience_block_item_cover wikis">
+         <a href="/default/link/wiki_page?id=${tag_id}&wiki_key=${inckey}&amount=2" class="experience_news_link">
+            <div class="experience_block_item_big">
+                {{if image}}
+                    <div class="experience_block_title">${title}</div>
+                    <div class="experience_block_content"><img src="${image}" alt="" /></div>
+                {{else}}
+                    <div class="experience_block_content news_without_pic">${title}</div>
+                {{/if}}
+            </div>
+        </a>
+    </li>
+</script>
+<div class = "hidden">
+    <form id="news_form" action ="/default/link/newspagefromlink" method="post">
+        <input name ="title" id="newsfr_title" value=""/>
+        <input name ="url" id="newsfr_url" value=""/>
+        <input name ="thumbnail" id="newsfr_thumbnail" value=""/>
+    </form>
+</div>
+<?php if(!$this->error): ?>
+    <h1 class="page_title">
+        <?php print $this->exp_title; ?>
+        <?if(empty($this->blockAddLink)):?>
+            <a href="javascript:void(0)" class="add_experience_btn_link" onclick="show_popup('addLink');">Add link</a>
+        <?endif;?>
+    </h1>
+    <div id="experience-content" class="experience-content">
+        <div id="experience_blocks">
+            <div class="tabs_experience_big">
+                <a href="javascript:void(0)" id="experience_bookmarks" class="experience_tab tab_news already_exist active" title="Bookmarks" data-id="<?=$this->exp_id;?>">Bookmarks</a>
+                <a href="javascript:void(0)" id="experience_news" class="experience_tab tab_news" title="News"  data-id="<?=$this->exp_id;?>">News</a>
+                <a href="javascript:void(0)" id="experience_images" class="experience_tab tab_image" title="Videos" data-id="<?=$this->exp_id;?>">Images</a>
+                <a href="javascript:void(0)" id="experience_videos" class="experience_tab tab_video" title="Images" data-id="<?=$this->exp_id;?>">Videos</a>
+                <a href="javascript:void(0)" id="experience_wikis" class="experience_tab tab_wiki" title="Wikipedia" data-id="<?=$this->exp_id;?>">Wikipedia</a>
+            </div>
+            <div id="tabs_experience_content" class="tabs_experience_content active">
+                <?php if(!empty($this->all_links_arr)): ?>
+                    <?php foreach($this->all_links_arr as $type_key => $link): ?>
+                        <?php if($type_key == 'bookmarks'): ?>
+                            <?php foreach($link as $item): ?>
+                                <li class="experience_block_item_cover <?php print $type_key; ?>">
+                                    <div class="experience_block_item_big experience_popup">
+                                        <?php print $delete_block; ?>
+                                        <?if($item['old_rec'] == 1 && empty($item['thumbnail'])):?>
+                                            <div class="experience_block_content news_without_pic"><?=$item['title']?></div>
+                                        <?php else: ?>
+                                            <div class="experience_block_title"><?=$item['title']?></div>
+                                            <div class="experience_block_content">
+                                               <?php if(empty($item['old_rec'])):?>
+                                                    <img src="<?php print $this->temp_dir.$item['thumbnail']; ?>" alt="" />
+                                                <?php else: ?>
+                                                    <?if($item['old_rec'] == 2): ?>
+                                                        <img src="<?=$item['url']; ?>" alt="" class="images" />
+                                                    <?else: ?>
+                                                        <?if(!empty($item['thumbnail'])):?>
+                                                            <img src="<?=$item['thumbnail']; ?>" alt="" />
+                                                        <?else:?>
+                                                            <?if(!empty($item['description'])):?><?=$item['description']?><?endif;?>
+                                                        <?endif;?>
+                                                    <?endif;?>
+                                                <?endif;?>
+                                            </div>                                            
+                                        <?php endif; ?>
+
+                                        <div class="original">
+                                            <h3 class="experience_popup_title hide_comment"><?=$item['title']?></h3>
+                                            <div class="experience_popup_left" style="position: relative;">
+                                                <?if($item['old_rec'] == 2): ?>
+                                                    <img src="<?=$item['url']; ?>" alt="" class="images" />
+                                                <?elseif($item['old_rec'] == 3): ?>
+                                                    <object width="516" height="315">
+                                                        <param name="movie" value="http://www.youtube.com/v/<?=$item['url']; ?>?amp;version=3" />
+                                                        <param name="allowFullScreen" value="true" />
+                                                        <param name="allowscriptaccess" value="always" />
+                                                        <embed src="http://www.youtube.com/v/<?=$item['url'];?>?version=3" type="application/x-shockwave-flash" width="516" height="315" allowscriptaccess="always" allowfullscreen="true"></embed>
+                                                    </object>
+                                                <?else: ?>
+                                                    <?if(!empty($item['thumbnail'])):?>
+                                                        <?php if(empty($item['old_rec'])):?>
+                                                            <img src="<?=$this->temp_dir.$item['thumbnail']; ?>" alt="" />
+                                                        <?php else: ?>
+                                                            <img src="<?=$item['thumbnail']; ?>" alt="" />
+                                                        <?php endif;?>
+                                                    <?endif;?>
+                                                    <?if(!empty($item['description'])):?>
+                                                        <?=$item['description']?>
+                                                        <?if($item['old_rec'] == 1):?>
+                                                            <div class ="news_more_btn_div">
+                                                                <a class="news_more_btn" href="/default/fblinks/news?id=<?=$item['id']?>">See more ...</a>
+                                                            </div>
+                                                        <?endif;?>
+                                                    <?endif;?>
+                                                <?endif;?>
+                                                <div class="show_comm_btn active"></div>
+                                            </div>
+                                            <div class="experience-item_btns hide_comment" style="width: 100%; text-align: center;">
+                                                <a class="experience_btns resplyst" href="javascript:void(0)">Splyse</a>
+                                                <a class="experience_btns share" href="javascript:void(0)">Share</a>
+                                            </div>
+                                            <div class="experience_popup_right">
+                                                <h3 class="experience_popup_title show_comment"><?=$item['title']?></h3>
+                                                <div class="popup_comment_wrap_ajax"></div>
+                                                <div class="popup_form form-item" style="margin: 5px;">
+                                                    <img src="<?=$_SESSION['user_pic']?>" class="comment_img"/>
+                                                    <textarea name="comment_text" class="form-textarea" placeholder="Comment"></textarea>
+                                                </div>
+
+                                                <div class="experience-item_btns show_comment">
+                                                    <a class="experience_btns resplyst" href="javascript:void(0)">Splyse</a>
+                                                    <a class="experience_btns share" href="javascript:void(0)">Share</a>
+                                                </div>
+                                                <div>
+                                                    <input class="add_comm" type="button" onclick="scan();" value="Comment" data="<?=$item['id']?>" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            <?php endforeach; ?> 
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <div class="empty_page">This experience has no links.</div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+<?php else: ?>
+    <h1 class="page_title">Error</h1>
+    <div class="experience-content">
+        You don't have permissions to view this experience.
+    </div>
+<?php endif;?>
+    
+<script>
+    $(document).ready(function(){
+//        show_recom();
+        $('.hide_comment').hide();
+        $('.show_comment').show();
+        var milk = 0;
+        $('.show_comm_btn').live('click',function(){
+            if(milk == 0){
+                $('.hide_comment').show();
+                $(this).removeClass('active');
+                $('.show_comment').removeClass('active').hide();
+                $('.experience_popup_right').hide('Clip');
+                milk = 1;
+            }else{
+                $('.hide_comment').hide();
+                $(this).addClass('active');
+                $('.show_comment').show();
+                $('.experience_popup_right').show('Clip');
+                milk = 0;
+            }
+        });
+        $('.add_comm').live('click', function(){
+            data = $(this).attr('data');
+            ths = $(this).parent().parent();
+            $(this).parent().parent().find('textarea[name=comment_text]').each(function(){
+                commemt = $(this).val();
+            });
+            if(commemt != ''){
+                $.post('/default/ajax/addcomment',{link_id:data,text:commemt}, function(resp){
+                    $(ths).find(".popup_comment_wrap_ajax").empty().append(resp);
+                    $(".popup_comment_wrap").mCustomScrollbar({
+                        scrollInertia: 4,
+                        advanced:{
+                            updateOnContentResize: true
+                        }
+                    });
+                    $(".popup_comment_wrap").mCustomScrollbar("scrollTo","bottom");
+                }, 'html');
+            }
+        });
+    });
+    function opennews(url, title,thumb){
+        $('#newsfr_title').val(title);
+        $('#newsfr_url').val(url);
+        $('#newsfr_thumbnail').val(thumb);
+        $('#news_form').submit();
+    }
+</script>

@@ -1,0 +1,27 @@
+<h1 class="h1_page">Login</h1>
+<div class="form-wrapper">
+    <form id="login-from" class="login_from" action="" method="POST">
+        <div class="form-item">
+            <a class="fb login_button" href="javascript:void(0)" onclick="login()">
+                <div class="logo_wrapper"><span class="fb_logo"></span></div>
+                <span>Login with Facebook</span>
+            </a>
+        </div>
+        <div class="form-item">
+            <label class="form-label" for="email">E-mail</label>
+            <input id="email" name="email" type="text" class="form-text" placeholder="E-mail" />
+        </div>
+        <div class="form-item">
+            <label class="form-label" for="password">Password</label>
+            <input id="password" name="password" type="password" class="form-text" placeholder="Password" />
+        </div>
+        <? if (!empty($this->error)): ?>
+            <div class="form-item red-text">
+                <?= $this->error['text']; ?>
+            </div>
+        <? endif; ?>
+        <div class="form-actions">
+            <input type="submit" class="form-submit" value="Login" />
+        </div>
+    </form>
+</div>

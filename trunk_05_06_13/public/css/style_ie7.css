@@ -1,0 +1,15 @@
+.news.recommendation-item .recommendation-item_content .recommendation_title_type {
+    top: 145px;
+}
+.recommendation-item_title{
+    background: #000000;
+    filter: alpha(opacity=80);
+}
+.recommendation_blocks{
+    height: 790px;
+}
+.splyst_popups_wrap{
+    width: 620px;
+}.recommendation-item_btns{
+    width: 200px !important;
+}

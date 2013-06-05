@@ -1,0 +1,75 @@
+<script src="/js/validation-password.js"></script>
+
+<h1 class="h1_page">Register</h1>
+<div class="form-wrapper">
+    <form id="register-from" class="register_from" action="" method="POST">
+        <div class="form-item">
+            <label class="form-label" for="user_name">User name</label>
+            <input id="user_name" name="user_name" type="text" class="form-text" placeholder="User name" value="<?=$this->user['name']?>"/>
+        </div>
+        <div class="form-item">
+            <label class="form-label" for="email">E-mail</label>
+            <input id="email" name="email" type="text" class="form-text<?php if(!empty($this->error['email'])) print ' error'; ?>" placeholder="E-mail" value="<?=$this->user['email']?>"/>
+            <?if( isset($this->error) && !empty($this->error['email']) ):?>
+                <div style="display: none" class ="erDiv">
+                    <?= $this->error['email'];?>
+                </div>
+            <?endif;?>
+        </div>
+        <div class="form-item">
+            <label class="form-label" for="birthday">Birthday</label>
+            <input id="birthday" name="birthday" type="text" class="form-text" placeholder="Birthday" value="<?=$this->user['birthday']?>" />
+        </div>
+        <div class="form-item">
+            <label class="form-label" for="password">Password</label>
+            <input id="password" name="password" type="password" class="form-text<?php if(!empty($this->error['password'])) print ' error'; ?>" placeholder="Password" onkeyup="passwordStrength(this.value)" />
+            <?if( isset($this->error) && !empty($this->error['password']) ):?>
+                <div style="display: none" class ="erDiv">
+                     <?= $this->error['password'];?>
+                </div>
+            <?endif;?>
+        </div>
+        <div class="form-item">
+            <label  class="form-label" for="passwordStrength">Password strength</label>
+        <div id="passwordDescription">Password not entered</div>
+        <div id="passwordStrength" class="strength0"></div>
+        </div>
+        <div class="form-item">
+            <label class="form-label" for="confirm_password">Confirm password</label>
+            <input id="confirm_password" name="confirm_password" type="password" class="form-text" placeholder="Confirm password" />
+        </div>
+        <div class="form-item">
+            <label class="form-label">Gender</label>
+            <div class="radio-item">
+                <label for="male"><input id="male" type="radio" name="gender" value="0"<?if($this->user['gender']=='0')echo "checked"?>><span class="radio-label">Male</span></label>
+            </div>
+            <div class="radio-item">
+                <label for="female"><input id="female" type="radio" name="gender" value="1" <?if($this->user['gender']=='1')echo "checked"?>><span class="radio-label">Female</span></label>
+            </div>
+        </div>
+        <input type="hidden" name="fb_id" value="<?=$this->user['id']?>">
+        <div class="form-actions btn_next">
+            <input id="next" type="button" class="form-submit" value="Next" />
+        </div>
+    </form>
+</div>
+
+<script>
+    $(document).ready(function(){
+        $('#next').click(function(){
+            $('#register-from').submit();
+        });
+        $('.error').mouseover(function(){
+            $(this).next('.erDiv').show();
+        })
+        $('.error').bind('mouseout focus', function(){
+            $(this).next('.erDiv').hide();
+        })
+        $( "#birthday" ).datepicker({
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "1950:2012"
+        });
+//        hide_errors();
+    });
+</script>

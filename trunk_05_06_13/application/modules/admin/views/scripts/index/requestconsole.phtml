@@ -1,0 +1,93 @@
+<div class = "wrap">
+    <div>
+        <img class = "logotip" src="/img/logo.png" alt="" />
+    </div>
+    <div id ="logout"><a href="/admin/index/logout">Logout</a></div>
+    <div class="main">
+        <h3>Login</h3>
+        <p>
+            <b>path:</b> /api/login</br>
+            <b>method:</b> post
+        </p>
+        <form action="" method="post">
+            <div class="form-item">
+                <label>Facebook user id</label>
+                <input name="fb_user_id" value="" type="text" />
+            </div>
+            <div class="form-item">
+                <label>Access token</label>
+                <input name="fb_access_token" value="" type="text" />
+            </div>
+            <div class="form-item">
+                <input name="v" value="1" type="hidden" />
+                <input type="submit" value="Send" />
+            </div>
+        </form>
+        <?php if($this->form_result): ?>
+            <h4>Result</h4>
+            <div class="console_reslut">
+                <?php print $this->form_result; ?>
+            </div>
+            <?php if($this->request_token): ?>
+                <div><h4>Request token</h4><p><?php print $this->request_token;?></p></div>
+            <?php endif; ?>
+        <?php endif; ?>
+    </div>
+</div>
+
+<style>
+    body{
+        background: none repeat scroll 0 0 #FAFBFC;
+    }
+    tr:nth-child(even){
+        background: #E4EBF2;
+    }
+    tr:nth-child(odd){
+        background: #CCD6E0;
+    }
+    tr{
+        padding: 3px;
+    }
+    h3{
+        margin: 21px 20px 3px
+    }
+    button{
+        margin-top: 20px;
+    }
+    .wrap{
+        width: 100%;
+    }
+        /*    .wrap div{
+            margin: auto;
+            width: 500px;
+        }*/
+    td{
+        padding: 0 5px;
+    }
+    th{
+        background: none repeat scroll 0 0 #599CBD;
+        color: white;
+        font-weight: 100;
+        padding: 0 6px;
+        text-align: center;
+    }
+    .cent{
+        text-align: center;
+    }
+    td.delmai{
+        background: white;
+    }
+    #logout{
+        float: right;
+        margin: 10px;
+    }
+    img.logotip{
+        float: left;
+        margin: 20px 20px 26px 21px;
+    }
+    .main{
+        clear: both;
+        margin-left: 70px;
+        margin-top: 40px;
+    }
+</style>

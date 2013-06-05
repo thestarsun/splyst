@@ -1,0 +1,48 @@
+<?php
+    $controller = \Zend_Controller_Front::getInstance()->getRequest()->getControllerName();
+    $module = \Zend_Controller_Front::getInstance()->getRequest()->getModuleName();
+    $action = \Zend_Controller_Front::getInstance()->getRequest()->getActionName();
+    
+    $config = new Zend_Config_Ini('../application/configs/email.ini', 'production');
+?>
+<div class="dashboard_block">
+    <?if(!empty($_SESSION['user_id'])):?>
+        <div class="dashboard-user">
+            <div class="dashboard-user_photo"><img src="<?=$_SESSION['user_pic']?>" /></div>
+            <div class="dashboard-user_name">
+                <?=$_SESSION['user_name']?>
+            </div>
+            <div class="header-btns">
+                <?php print $this->render("notifications.phtml"); ?>
+            </div>
+        </div>
+    <?endif;?>
+    <div class="dashboard-user_menu">
+        <ul class="menu">
+            <li class="menu_item<? if($controller == 'recommendation'&&$module == 'default') print ' active'; ?>"><a href="/default/recommendation/index">What's New<span id="recCounter" class="recCounter"></span></a></li>
+            <li class="menu_item<? if($controller == 'dashboard'&&$module == 'default') print ' active'; ?>"><a href="/default/dashboard/index">Experiences</a></li>
+            <li class="menu_item<? if($controller == 'collaborator'&&$module == 'default') print ' active'; ?>"><a href="/default/collaborator/index">People</a></li>
+            <?php if(!empty($_SESSION['user_name'])): ?>
+                <li class="menu_item"><a href="javascript:void(0)" onclick="logout()">Logout</a></li>
+            <?php endif; ?>            
+        </ul>
+    </div>
+</div>
+
+<div class="sidebar_btns_wrap">
+    <div class="sidebar_btns">
+        <?php if($controller =='dashboard' && $module =='default' && $action =='index'): ?>
+            <div class="add_experience_block">
+                <a href="javascript:void(0)" class="add_experience_btn" onclick="show_popup('addExp')">Add new experience</a>
+            </div>
+        <?php elseif(($controller =='dashboard' && $module =='default' && $action =='experience')): ?>
+            <div class="add_experience_block">
+                <a href="javascript:void(0)" class="add_experience_btn" onclick="show_popup('addLink')">Add new link</a>
+            </div>
+        <?php endif;?>
+
+        <div class="feedback_btn">
+            <a href="mailto:<?php print $config->email->email_from ?>">Send Feedback</a>
+        </div>
+    </div>
+</div>

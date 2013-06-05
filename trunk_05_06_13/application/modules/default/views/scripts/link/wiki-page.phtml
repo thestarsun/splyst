@@ -1,0 +1,25 @@
+<script type="text/javascript">
+    jQuery(document).ready(function(){
+        jQuery("#dashboard-content").mCustomScrollbar({
+            scrollInertia: 4,
+            advanced:{
+                updateOnContentResize:true
+            }
+        });
+        //resize_bg();
+        jQuery(window).resize(function(){
+            //resize_bg();
+        });
+    });
+</script>
+<div id="dashboard-content" class="dashboard-content wiki_page">
+    <div data-role="page" id="wiki" class="wiki_page_container">
+        <div data-role="header" data-theme="a" data-position="fixed" data-id="head" data-add-back-btn="true"></div>
+        <div id="reader_body" class="wiki_page_body">
+            <h1 id="reader_title">
+                <?=$this->title; ?>
+            </h1>
+            <?=$this->content; ?>
+        </div>
+    </div>
+</div>

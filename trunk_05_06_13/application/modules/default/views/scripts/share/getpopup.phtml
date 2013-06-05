@@ -1,0 +1,114 @@
+<form type="post" action="/default/share/execshare" id="execshare">
+    <div class="form-item">
+        <span class="form-text_bg input_friends"></span>
+        <ul id ="tags"></ul>
+    </div>
+    <div class="form-item">
+        <ul class="tagit ui-widget ui-widget-content ui-corner-all"><li id="tagit"></li></ul>
+        <div id="allTags" style="display:none"><?=$this->friends_name?></div>
+    </div>
+    <div class="form-item share_pop_content">
+        <?if(!empty($this->thumbnail)):?>
+            <div class="share_pop_content_img">
+                <img src ="<?=$this->thumbnail?>">
+            </div>
+        <?endif;?>
+        <div class="share_pop_content_title"><?=$this->title?></div>
+        <div><?=$this->description?></div>
+    </div>
+    <div class="form-item">
+        <textarea id ="comment" name="comment" placeholder="Comment" class="form-textarea"></textarea>
+    </div>
+    <div class="checkbox-item">
+        <input id="fb_msg" type="checkbox" name="fb_msg" class="form-checkbox" />
+        <label for="fb_msg">Send to friend on Facebook</label>
+    </div>
+    <div class="checkbox-item">
+        <input id="fb_wall" type="checkbox" name="fb_wall" class="form-checkbox" />
+        <label for="fb_wall">Post to my Facebook timeline</label>
+    </div>
+    <div class="checkbox-item long">
+        <input id="exp_lock" type="checkbox" name="exp_lock" class="form-checkbox" value="12" />
+        <label for="exp_lock" checked ="checked">Friends can share to Friends</label>
+    </div>
+    <div id="alert_msg" class = "hidden red-text" style="float: left" >Please select friends or check boxes that connect with facebook!</div>
+    <div class="form-item btn_next">
+        <input type="hidden" value="<?=$this->id?>" id="rec_id" />
+        <input type="hidden" value="<?=$this->title?>" id="rec_title" />
+        <input type="hidden" value="<?=$this->thumbnail?>" id="rec_thumbnail" />
+        <input type="hidden" value="<?=$this->description?>" id="rec_description" />
+        <input type="button" name="Send" value="Share" class="form-submit" onclick="execshare()" />
+    </div>
+</form>
+<script>
+    $("#tags").tagit({
+        availableTags: $.parseJSON($('#allTags').text()),
+        autocomplete: {delay: 0, minLength: 1},
+        fieldName: "friends[]",
+        allowNewTags:false,
+        tagExist:[]
+    });
+    
+    
+    function execshare(){
+        $('#alert_msg').hide();
+        var friends = [];
+        $("input[name='friends[]']").each(function(){
+            friends.push($(this).val());
+        });
+        wall = $('#fb_wall').is(':checked');
+        msg = $('#fb_msg').is(':checked');
+        if(msg == true || wall == true || friends.length > 0){
+            show_spiner();
+            title = $('#rec_title').val();
+            thumbnail = $('#rec_thumbnail').val();
+            description = $('#rec_description').val();
+            $.post('/default/share/execshare', 
+            {'rec_id':$('#rec_id').val(),
+            'comment':$('#comment').val(),
+            'friends':friends,
+            'exp_lock':$('#exp_lock').is(':checked')
+            }, function(resp){
+                show_spiner_close();
+                close_popup();
+                fr_arr = $.parseJSON(resp.js_ar_fr);
+                if(msg == true){
+                    FB.ui({
+                        method: 'send',
+                        to: fr_arr[friends[0]],
+                        link: resp.link,
+                        picture: thumbnail,
+                        name: title,
+                        description: description
+                    },function() {
+                        if(wall == true){
+                            FB.ui({
+                                method: 'feed',
+                                link: resp.link,
+                                picture: thumbnail,
+                                name: title,
+                                caption: 'splyst.com',
+                                description: description
+                            },function(){});
+                        }
+                    })
+                }else if (wall == true){
+                       FB.ui({
+                                method: 'feed',
+                                link: resp.link,
+                                picture: thumbnail,
+                                name: title,
+                                caption: 'splyst.com',
+                                description: description
+                        },function(){});
+                }
+            }, 'json')
+        }else{
+             $('#alert_msg').show();
+        }
+    }
+    
+    $(document).ready(function(){
+        $('.ui-autocomplete-input').attr('placeholder','Enter Name').attr('style', 'color:#B5B0AA');
+    })
+</script>

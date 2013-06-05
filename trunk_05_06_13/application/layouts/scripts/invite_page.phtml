@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <?=$this->partial("head.phtml"); ?> <!-- connect head -->
+        <link rel="stylesheet" href="/css/resize_bg/supersized.core.css" type="text/css" media="screen" />
+        <script type="text/javascript" src="/js/resize_bg/supersized.core.3.2.1.min.js"></script>
+    </head>
+    <body>
+        <div id="wrapper" class="wrapper invite_page">
+            <div class="invite_page_logo"><img src="/img/logo_big.png" alt="splyst" /></div>
+            <div class="invite_page_wrap">
+                <div class="invite_page_container">
+                    <h1>Discover, organize and share the things you love and need.</h1>
+                    <h3>We learn your interests and find things you want to see.</h3>
+                    <a href="javascript:void(0)" class="invite_page_btn" onclick="show_popup('landing_invite')">Request an invite</a>
+                    <div class="invite_page_login">
+                        Have an account? <a href="/default/index/login">Login</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php print $this->partial("footer.phtml"); ?> <!-- connect footer -->
+        <?php print $this->partial("pop-ups.phtml"); ?> <!-- connect pop-ups window -->
+    </body>
+</html>

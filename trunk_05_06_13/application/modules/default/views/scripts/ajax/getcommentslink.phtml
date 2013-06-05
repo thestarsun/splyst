@@ -1,0 +1,34 @@
+<?php
+    $comments_arr = json_decode($this->comments);
+    if($comments_arr[0] == null){
+        $arr['panel'] = 'on';
+        if(empty($_SESSION['user_id'])) $arr['panel'] = 'off';        
+        $arr['html'] = '<div class="popup_nocomment">No comments. You can be first.</div>';
+    }else{
+        $arr['panel'] = 'on';
+        $arr['html'] = ''?>
+        <?if(!empty($this->comments)):?>
+        <?php $arr['html'] .= '<div class="popup_comment_wrap">';?>
+                <?foreach(json_decode($this->comments, true) as $comment):?>
+                    <?php if(!empty($comment)): ?>
+                        <?if(empty($this->fb_fr_arr)||(in_array($comment['fb_user_id'], $this->fb_fr_arr))):?>
+                            <?php $arr['html'] .= '<div class="popup_comment_item">';?>
+                                <?php $arr['html'] .= '<div class="popup_comment_top">';?>
+                                    <?php $arr['html'] .= '<div class="comment_avatar"><img src="'.$comment['user_pic'].'" width="50px" height="50px" /></div>';?>
+                                    <?php $arr['html'] .= '<div class="comment_user_name">'.$comment['name'].'</div>';?>
+                                    <?php $arr['html'] .= '<div class="comment_date">'.date('F j, Y', strtotime($comment['date'])).'</div>';?>
+                                    <?php $arr['html'] .= '<div class="comment_date">'.date('h:i A', strtotime($comment['date'])).'></div>';?>
+                                <?php $arr['html'] .= '</div>';?>
+                                <?php $arr['html'] .= '<div class="popup_comment_text">'.$comment['data'].'</div>';?>
+                            <?php $arr['html'] .= '</div>';?>
+                        <?endif?>
+                    <?endif?>
+                <?endforeach;?>
+            <?php $arr['html'] .= '</div>';?>
+        <?else:?>
+            <?php $arr['html'] .= '<div class="popup_nocomment">No comments. You can be first.</div>';?>
+        <?endif;?>
+            
+<?php }
+    print json_encode($arr);
+?>
